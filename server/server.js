@@ -24,6 +24,10 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+const productRoutes = require("./routes/productRoutes");
+
+app.use("/api/products", productRoutes);
+
 
 
 

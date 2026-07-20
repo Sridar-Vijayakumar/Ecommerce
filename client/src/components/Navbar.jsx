@@ -1,4 +1,8 @@
-<ul className="hidden md:flex gap-8">
+import React from 'react'
+
+function Navbar() {
+  return (
+    <div><ul className="hidden md:flex gap-8">
   <li>
     <a href="#home">Home</a>
   </li>
@@ -12,4 +16,8 @@
     <a href="#contact">Contact</a>
   </li>
 </ul>
+</div>
+  )
+}
 
+export default Navbar

@@ -12,7 +12,7 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+  
     try {
       const { data } = await API.post(
         "/auth/login",
@@ -66,3 +66,4 @@ const Login = () => {
 };
 
 export default Login;
+

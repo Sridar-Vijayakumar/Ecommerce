@@ -11,7 +11,7 @@ const ProductDetails = () => {
       const { data } = await API.get(`/products/${id}`);
       setProduct(data);
     };
-
+      
     fetchProduct();
   }, [id]);
 

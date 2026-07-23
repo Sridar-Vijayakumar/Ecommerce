@@ -1,34 +1,46 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const authRoutes = require("./routes/authRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const productRoutes = require("./routes/productRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
 const path = require("path");
 
-dotenv.config();
+const connectDB = require("./config/db");
+
+// Routes
+const authRoutes = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+
+// Connect Database
 connectDB();
 
 const app = express();
 
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
+// Static Folder
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+app.use("/api/payment", paymentRoutes);
 
-const PORT = process.env.PORT || 5000;
-
+// Home Route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Start Server
+const PORT = process.env.PORT || 5000;
 
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});

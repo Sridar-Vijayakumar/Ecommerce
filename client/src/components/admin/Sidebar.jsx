@@ -1,41 +1,59 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  LogOut,
+} from "lucide-react";
 
 const Sidebar = () => {
+  const linkClass = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+      isActive
+        ? "bg-blue-600 text-white"
+        : "text-gray-300 hover:bg-gray-800 hover:text-white"
+    }`;
+
   return (
-    <aside className="w-64 bg-gray-900 text-white min-h-screen">
-      <div className="text-2xl font-bold text-center py-6 border-b border-gray-700">
-        Admin Panel
+    <aside className="w-64 min-h-screen bg-gray-900 shadow-lg flex flex-col">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-700">
+        <h1 className="text-2xl font-bold text-white text-center">
+          Admin Panel
+        </h1>
       </div>
 
-      <nav className="flex flex-col p-4 gap-4">
-        <Link
-          to="/admin"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          📊 Dashboard
-        </Link>
+      {/* Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        <NavLink to="/admin" end className={linkClass}>
+          <LayoutDashboard size={20} />
+          <span>Dashboard</span>
+        </NavLink>
 
-        <Link
-          to="/admin/products"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          📦 Products
-        </Link>
+        <NavLink to="/admin/products" className={linkClass}>
+          <Package size={20} />
+          <span>Products</span>
+        </NavLink>
 
-        <Link
-          to="/admin/orders"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          📋 Orders
-        </Link>
+        <NavLink to="/admin/orders" className={linkClass}>
+          <ShoppingCart size={20} />
+          <span>Orders</span>
+        </NavLink>
 
-        <Link
-          to="/admin/users"
-          className="hover:bg-gray-700 p-3 rounded"
-        >
-          👤 Users
-        </Link>
+        <NavLink to="/admin/users" className={linkClass}>
+          <Users size={20} />
+          <span>Users</span>
+        </NavLink>
       </nav>
+
+      {/* Logout */}
+      <div className="p-4 border-t border-gray-700">
+        <button className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition">
+          <LogOut size={18} />
+          Logout
+        </button>
+      </div>
     </aside>
   );
 };

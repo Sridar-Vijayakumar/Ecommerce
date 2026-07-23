@@ -4,7 +4,7 @@ import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
 import ProductCard from "../components/ProductCard";
 import About from "../components/About";
-import Footer from "../components/Footer";
+// import Footer from "../components/Footer";
 
 const Home = () => {
   const [category, setCategory] = useState("");
@@ -105,7 +105,7 @@ const Home = () => {
       <About />
 
       {/* Footer */}
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

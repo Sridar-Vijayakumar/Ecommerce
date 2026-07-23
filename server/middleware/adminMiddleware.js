@@ -3,9 +3,9 @@ const admin = (req, res, next) => {
     next();
   } else {
     res.status(403).json({
-      message: "Admin access only",
+      error: "Not authorized as admin",
     });
   }
 };
 
-module.exports = { admin }; 
+module.exports = { admin };

@@ -1,55 +1,23 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import CartItem from "../components/CartItem";
-import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      _id: "1",
-      name: "iPhone 16 Pro",
-      image: "https://via.placeholder.com/150",
-      price: 129999,
-      qty: 1,
-    },
-    {
-      _id: "2",
-      name: "AirPods Pro",
-      image: "https://via.placeholder.com/150",
-      price: 24999,
-      qty: 2,
-    },
-  ]);
+  const navigate = useNavigate();
 
-  const increaseQty = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id
-          ? { ...item, qty: item.qty + 1 }
-          : item
-      )
-    );
+  const {
+    cartItems,
+    increaseQty,
+    decreaseQty,
+    removeFromCart,
+    totalPrice,
+    totalItems,
+  } = useContext(CartContext);
+
+  const checkoutHandler = () => {
+    navigate("/shipping");
   };
-
-  const decreaseQty = (id) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item._id === id && item.qty > 1
-          ? { ...item, qty: item.qty - 1 }
-          : item
-      )
-    );
-  };
-
-  const removeFromCart = (id) => {
-    setCartItems((items) =>
-      items.filter((item) => item._id !== id)
-    );
-  };
-
-  const totalPrice = cartItems.reduce(
-    (acc, item) => acc + item.price * item.qty,
-    0
-  );
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
@@ -72,6 +40,7 @@ const Cart = () => {
         </div>
       ) : (
         <div className="grid lg:grid-cols-3 gap-8">
+
           {/* Cart Items */}
           <div className="lg:col-span-2">
             {cartItems.map((item) => (
@@ -93,12 +62,7 @@ const Cart = () => {
 
             <div className="flex justify-between mb-4">
               <span>Total Items</span>
-              <span>
-                {cartItems.reduce(
-                  (acc, item) => acc + item.qty,
-                  0
-                )}
-              </span>
+              <span>{totalItems}</span>
             </div>
 
             <div className="flex justify-between mb-6">
@@ -108,10 +72,14 @@ const Cart = () => {
               </span>
             </div>
 
-            <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition">
+            <button
+              onClick={checkoutHandler}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition"
+            >
               Proceed to Checkout
             </button>
           </div>
+
         </div>
       )}
     </div>

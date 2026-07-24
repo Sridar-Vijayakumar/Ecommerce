@@ -6,7 +6,7 @@ const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(
     JSON.parse(localStorage.getItem("userInfo")) || null
   );
-
+ 
   const login = (data) => {
     setUserInfo(data);
     localStorage.setItem(
@@ -35,3 +35,4 @@ const AuthProvider = ({ children }) => {
 
 export default AuthProvider;
 
+  

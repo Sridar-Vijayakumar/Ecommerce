@@ -1,43 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API from "../../services/api";
+import Loader from "../../components/Loader";
 import ProductTable from "../../components/admin/ProductTable";
 
 const Products = () => {
-  const [products] = useState([
-    {
-      _id: "1",
-      name: "iPhone 16 Pro",
-      price: 129999,
-      category: "Mobiles",
-      countInStock: 15,
-    },
-    {
-      _id: "2",
-      name: "MacBook Pro M4",
-      price: 199999,
-      category: "Laptops",
-      countInStock: 8,
-    },
-    {
-      _id: "3",
-      name: "AirPods Pro",
-      price: 24999,
-      category: "Accessories",
-      countInStock: 25,
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      console.log("Delete Product:", id);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
 
-      // TODO:
-      // DELETE /api/products/:id
+      const { data } = await API.get("/products");
+
+      // Supports both:
+      // { products: [...] }
+      // or [...]
+      setProducts(data.products || data);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Failed to fetch products"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+
+    try {
+      await API.delete(`/products/${id}`);
+
+      alert("Product deleted successfully.");
+
+      fetchProducts();
+    } catch (err) {
+      alert(
+        err.response?.data?.message ||
+          "Failed to delete product."
+      );
+    }
+  };
+
+  if (loading) return <Loader />;
+
+  if (error) {
+    return (
+      <h2 className="text-center text-red-600 mt-10">
+        {error}
+      </h2>
+    );
+  }
+
   return (
-    <div>
+    <div className="p-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>

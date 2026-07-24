@@ -14,18 +14,25 @@ const CartProvider = ({ children }) => {
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
+  // Save cart to localStorage
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (product) => {
-    const exist = cartItems.find((item) => item._id === product._id);
+  // Add to Cart
+  const addToCart = (product, qty = 1) => {
+    const existItem = cartItems.find(
+      (item) => item._id === product._id
+    );
 
-    if (exist) {
+    if (existItem) {
       setCartItems(
         cartItems.map((item) =>
           item._id === product._id
-            ? { ...item, qty: item.qty + 1 }
+            ? {
+                ...item,
+                qty: item.qty + qty,
+              }
             : item
         )
       );
@@ -34,41 +41,65 @@ const CartProvider = ({ children }) => {
         ...cartItems,
         {
           ...product,
-          qty: 1,
+          qty,
         },
       ]);
     }
   };
 
+  // Increase Quantity
   const increaseQty = (id) => {
     setCartItems(
       cartItems.map((item) =>
         item._id === id
-          ? { ...item, qty: item.qty + 1 }
+          ? {
+              ...item,
+              qty: item.qty + 1,
+            }
           : item
       )
     );
   };
 
+  // Decrease Quantity
   const decreaseQty = (id) => {
     setCartItems(
       cartItems
         .map((item) =>
           item._id === id
-            ? { ...item, qty: item.qty - 1 }
+            ? {
+                ...item,
+                qty: item.qty - 1,
+              }
             : item
         )
         .filter((item) => item.qty > 0)
     );
   };
 
+  // Remove Item
   const removeFromCart = (id) => {
-    setCartItems(cartItems.filter((item) => item._id !== id));
+    setCartItems(
+      cartItems.filter((item) => item._id !== id)
+    );
   };
 
+  // Clear Cart
   const clearCart = () => {
     setCartItems([]);
   };
+
+  // Total Price
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.qty,
+    0
+  );
+
+  // Total Items
+  const totalItems = cartItems.reduce(
+    (acc, item) => acc + item.qty,
+    0
+  );
 
   return (
     <CartContext.Provider
@@ -79,6 +110,8 @@ const CartProvider = ({ children }) => {
         decreaseQty,
         removeFromCart,
         clearCart,
+        totalPrice,
+        totalItems,
       }}
     >
       {children}

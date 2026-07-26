@@ -1,9 +1,13 @@
 const Razorpay = require("razorpay");
 
-
-
-console.log("KEY ID:", process.env.RAZORPAY_KEY_ID);
-console.log("KEY SECRET:", process.env.RAZORPAY_KEY_SECRET);
+if (
+  !process.env.RAZORPAY_KEY_ID ||
+  !process.env.RAZORPAY_KEY_SECRET
+) {
+  throw new Error(
+    "Razorpay credentials are missing. Check your .env file."
+  );
+}
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,

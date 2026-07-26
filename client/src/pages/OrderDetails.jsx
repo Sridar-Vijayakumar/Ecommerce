@@ -158,7 +158,7 @@ const OrderDetails = () => {
           <hr className="my-4" />
 
           <div className="flex justify-between text-2xl font-bold">
-            <span>Total</span>
+            <span>Total</span> 
 
             <span>
               ₹
@@ -210,3 +210,5 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
+ 
+

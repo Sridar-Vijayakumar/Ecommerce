@@ -1,4 +1,4 @@
-    const crypto = require("crypto");
+const crypto = require("crypto");
 const razorpay = require("../utils/razorpay");
 const Order = require("../models/Order");
 
@@ -90,3 +90,4 @@ module.exports = {
   createOrder,
   verifyPayment,
 };
+

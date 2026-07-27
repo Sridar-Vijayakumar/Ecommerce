@@ -1,17 +1,17 @@
-import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import API from "../services/api";
+import RazorpayButton from "../components/RazorpayButton";
 
 const Checkout = () => {
-  const navigate = useNavigate();
-
   const {
     cartItems,
     totalItems,
     totalPrice,
     clearCart,
   } = useContext(CartContext);
+
+  const [orderId, setOrderId] = useState(null);
 
   const shippingAddress = JSON.parse(
     localStorage.getItem("shippingAddress")
@@ -36,17 +36,12 @@ const Checkout = () => {
         totalPrice: grandTotal,
       });
 
-      alert("Order Placed Successfully!");
+      setOrderId(data._id);
 
-      clearCart();
-
-      localStorage.removeItem("shippingAddress");
-
-      navigate(`/orders/${data._id}`);
     } catch (error) {
       alert(
         error.response?.data?.message ||
-          "Failed to place order"
+        "Failed to create order"
       );
     }
   };
@@ -60,25 +55,17 @@ const Checkout = () => {
 
       <div className="grid lg:grid-cols-3 gap-8">
 
-        {/* Left Section */}
+        {/* Left Side */}
         <div className="lg:col-span-2">
 
-          {/* Shipping Address */}
+          {/* Shipping */}
           <div className="bg-white shadow rounded-xl p-6 mb-6">
             <h2 className="text-2xl font-bold mb-4">
               Shipping Address
             </h2>
 
-            <p>
-              <strong>Name:</strong>{" "}
-              {shippingAddress?.fullName}
-            </p>
-
-            <p>
-              <strong>Phone:</strong>{" "}
-              {shippingAddress?.phone}
-            </p>
-
+            <p><strong>Name:</strong> {shippingAddress?.fullName}</p>
+            <p><strong>Phone:</strong> {shippingAddress?.phone}</p>
             <p>
               <strong>Address:</strong>{" "}
               {shippingAddress?.address},{" "}
@@ -104,17 +91,11 @@ const Checkout = () => {
                   <h3 className="font-semibold">
                     {item.name}
                   </h3>
-
-                  <p>
-                    Qty: {item.qty}
-                  </p>
+                  <p>Qty: {item.qty}</p>
                 </div>
 
                 <div>
-                  ₹
-                  {(
-                    item.price * item.qty
-                  ).toLocaleString()}
+                  ₹{(item.price * item.qty).toLocaleString()}
                 </div>
               </div>
             ))}
@@ -122,7 +103,7 @@ const Checkout = () => {
 
         </div>
 
-        {/* Right Section */}
+        {/* Right Side */}
         <div className="bg-white shadow rounded-xl p-6 h-fit">
 
           <h2 className="text-2xl font-bold mb-6">
@@ -136,41 +117,43 @@ const Checkout = () => {
 
           <div className="flex justify-between mb-3">
             <span>Items Price</span>
-            <span>
-              ₹{totalPrice.toLocaleString()}
-            </span>
+            <span>₹{totalPrice.toLocaleString()}</span>
           </div>
 
           <div className="flex justify-between mb-3">
             <span>Shipping</span>
-            <span>
-              ₹{shippingPrice.toLocaleString()}
-            </span>
+            <span>₹{shippingPrice.toLocaleString()}</span>
           </div>
 
           <div className="flex justify-between mb-3">
-            <span>Tax (18%)</span>
-            <span>
-              ₹{taxPrice.toLocaleString()}
-            </span>
+            <span>Tax</span>
+            <span>₹{taxPrice.toLocaleString()}</span>
           </div>
 
           <hr className="my-4" />
 
-          <div className="flex justify-between text-2xl font-bold">
+          <div className="flex justify-between text-2xl font-bold mb-6">
             <span>Total</span>
-
-            <span>
-              ₹{grandTotal.toLocaleString()}
-            </span>
+            <span>₹{grandTotal.toLocaleString()}</span>
           </div>
 
-          <button
-            onClick={placeOrderHandler}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg mt-8"
-          >
-            Place Order
-          </button>
+          {!orderId ? (
+            <button
+              onClick={placeOrderHandler}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg"
+            >
+              Create Order
+            </button>
+          ) : (
+            <RazorpayButton
+              amount={grandTotal}
+              orderId={orderId}
+              onSuccess={() => {
+                clearCart();
+                localStorage.removeItem("shippingAddress");
+              }}
+            />
+          )}
 
         </div>
 

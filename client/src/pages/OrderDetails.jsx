@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
 import Loader from "../components/Loader";
+import { getProductImage } from "../utils/productImage";
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -87,7 +88,7 @@ const OrderDetails = () => {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={item.image}
+                    src={getProductImage(item)}
                     alt={item.name}
                     className="w-16 h-16 rounded-lg object-cover"
                   />

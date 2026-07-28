@@ -13,6 +13,7 @@ const Cart = () => {
     removeFromCart,
     totalPrice,
     totalItems,
+    clearCart,
   } = useContext(CartContext);
 
   const checkoutHandler = () => {
@@ -21,9 +22,7 @@ const Cart = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
-      <h1 className="text-4xl font-bold mb-8">
-        Shopping Cart
-      </h1>
+      <div className="mb-8 flex items-center justify-between"><h1 className="text-4xl font-bold">Shopping Cart</h1>{cartItems.length > 0 && <button onClick={clearCart} className="text-sm font-bold text-red-500 hover:underline">Empty cart</button>}</div>
 
       {cartItems.length === 0 ? (
         <div className="text-center py-16">

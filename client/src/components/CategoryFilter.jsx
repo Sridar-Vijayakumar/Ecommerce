@@ -12,13 +12,13 @@ const CategoryFilter = ({ selectedCategory, onCategory }) => {
   ];
 
   return (
-    <div className="flex items-center gap-3">
-      <Filter className="text-gray-500" size={20} />
+    <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
+      <Filter className="text-brand-600" size={19} />
 
       <select
         value={selectedCategory}
         onChange={(e) => onCategory(e.target.value)}
-        className="border border-gray-300 rounded-lg px-4 py-2 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="min-w-44 bg-transparent py-2.5 font-semibold text-slate-700 outline-none"
       >
         <option value="">All Categories</option>
 

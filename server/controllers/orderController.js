@@ -10,6 +10,9 @@ const placeOrder = async (req, res) => {
       shippingAddress,
       paymentMethod,
       totalPrice,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
     } = req.body;
 
     if (!orderItems || orderItems.length === 0) {
@@ -24,6 +27,9 @@ const placeOrder = async (req, res) => {
       shippingAddress,
       paymentMethod,
       totalPrice,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
     });
 
     res.status(201).json(order);
@@ -65,6 +71,10 @@ const getOrderById = async (req, res) => {
       return res.status(404).json({
         message: "Order not found",
       });
+    }
+
+    if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Not authorized to view this order" });
     }
 
     res.json(order);

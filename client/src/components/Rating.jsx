@@ -1,31 +1,16 @@
-const Rating = ({ value, text }) => {
-  const renderStar = (starNumber) => {
-    if (value >= starNumber) {
-      return <span className="text-yellow-400">★</span>;
-    }
+import { Star } from "lucide-react";
 
-    if (value >= starNumber - 0.5) {
-      return <span className="text-yellow-400">⯨</span>;
-    }
-
-    return <span className="text-gray-300">★</span>;
-  };
-
-  return (
-    <div className="flex items-center gap-1">
-      {renderStar(1)}
-      {renderStar(2)}
-      {renderStar(3)}
-      {renderStar(4)}
-      {renderStar(5)}
-
-      {text && (
-        <span className="ml-2 text-gray-600 text-sm">
-          {text}
-        </span>
-      )}
-    </div>
-  );
-};
+const Rating = ({ value = 0, text }) => (
+  <div className="flex items-center gap-1" aria-label={`${value} out of 5 stars`}>
+    {[1, 2, 3, 4, 5].map((star) => (
+      <Star
+        key={star}
+        size={15}
+        className={value >= star - 0.5 ? "fill-amber-400 text-amber-400" : "fill-slate-100 text-slate-300"}
+      />
+    ))}
+    {text && <span className="ml-1.5 text-xs font-medium text-slate-500">{text}</span>}
+  </div>
+);
 
 export default Rating;

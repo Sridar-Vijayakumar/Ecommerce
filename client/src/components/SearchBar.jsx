@@ -12,12 +12,12 @@ const SearchBar = ({ onSearch }) => {
   return (
     <form
       onSubmit={submitHandler}
-      className="flex items-center w-full max-w-lg mx-auto"
+      className="flex w-full max-w-xl items-center rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm"
     >
-      <div className="flex items-center w-full bg-white border border-gray-300 rounded-l-lg px-3">
+      <div className="flex w-full items-center px-3">
         <Search
           size={20}
-          className="text-gray-500"
+          className="text-slate-400"
         />
 
         <input
@@ -25,13 +25,13 @@ const SearchBar = ({ onSearch }) => {
           placeholder="Search for products..."
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="w-full px-3 py-3 outline-none"
+          className="w-full bg-transparent px-3 py-2.5 text-slate-900 placeholder:text-slate-400"
         />
       </div>
 
       <button
         type="submit"
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-r-lg transition"
+        className="rounded-xl bg-ink-900 px-6 py-2.5 font-bold text-white transition hover:bg-brand-700"
       >
         Search
       </button>

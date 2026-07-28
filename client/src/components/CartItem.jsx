@@ -1,4 +1,5 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { getProductImage } from "../utils/productImage";
 
 const CartItem = ({
   item,
@@ -11,7 +12,7 @@ const CartItem = ({
       {/* Product Details */}
       <div className="flex items-center gap-5 w-full md:w-auto">
         <img
-          src={item.image}
+          src={getProductImage(item)}
           alt={item.name}
           className="w-28 h-28 object-cover rounded-lg border"
         />

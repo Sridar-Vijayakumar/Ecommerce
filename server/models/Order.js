@@ -40,10 +40,19 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    itemsPrice: { type: Number, default: 0 },
+    shippingPrice: { type: Number, default: 0 },
+    taxPrice: { type: Number, default: 0 },
 
     isPaid: {
       type: Boolean,
       default: false,
+    },
+    paidAt: Date,
+    deliveredAt: Date,
+    paymentResult: {
+      id: String,
+      status: String,
     },
 
     isDelivered: {

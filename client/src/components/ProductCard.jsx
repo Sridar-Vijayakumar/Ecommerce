@@ -1,54 +1,39 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingCart } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
+import { CartContext } from "../context/CartContext";
+import { WishlistContext } from "../context/WishlistContext";
 import Rating from "./Rating";
+import { getProductImage } from "../utils/productImage";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, badge }) => {
+  const { addToCart } = useContext(CartContext);
+  const { toggleWishlist, isWishlisted } = useContext(WishlistContext);
+
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden">
-      {/* Product Image */}
-      <Link to={`/product/${product._id}`}>
-        <img
-          src={product.image || "https://placehold.co/400x300"}
-          alt={product.name}
-          className="w-full h-60 object-cover"
-        />
+    <article className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-soft">
+      {badge && <span className="absolute left-4 top-4 z-10 rounded-full bg-coral-500 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-white">{badge}</span>}
+      <button onClick={() => toggleWishlist(product)} aria-label={`Save ${product.name}`} className={`absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-white/90 shadow-sm transition hover:text-coral-500 ${isWishlisted(product._id) ? "text-coral-500" : "text-slate-500"}`}>
+        <Heart size={17} fill={isWishlisted(product._id) ? "currentColor" : "none"} />
+      </button>
+      <Link to={`/product/${product._id}`} className="block overflow-hidden">
+        <img src={getProductImage(product)} alt={product.name} loading="lazy" className="aspect-[4/3] w-full bg-slate-100 object-cover transition duration-500 group-hover:scale-105" />
       </Link>
-
-      {/* Product Details */}
-      <div className="p-4">
-        <Link to={`/product/${product._id}`}>
-          <h2 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition">
-            {product.name}
-          </h2>
-        </Link>
-
-        <p className="text-gray-500 text-sm mt-2">
-          {product.category}
-        </p>
-
-        {/* Rating */}
-        <div className="mt-3">
-          <Rating
-            value={product.rating || 0}
-            text={`${product.numReviews || 0} Reviews`}
-          />
+      <div className="p-5">
+        <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-600">{product.category}</p>
+        <Link to={`/product/${product._id}`}><h3 className="truncate text-lg font-extrabold text-ink-900 transition group-hover:text-brand-700">{product.name}</h3></Link>
+        <div className="mt-3"><Rating value={product.rating || 0} text={`${product.numReviews || 0}`} /></div>
+        <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+          <div>
+            <p className="text-xl font-black text-ink-900">₹{Number(product.price).toLocaleString("en-IN")}</p>
+            {product.oldPrice && <p className="text-xs text-slate-400 line-through">₹{Number(product.oldPrice).toLocaleString("en-IN")}</p>}
+          </div>
+          <button onClick={() => addToCart(product, 1)} aria-label={`Add ${product.name} to cart`} className="flex h-11 items-center gap-2 rounded-full bg-ink-900 px-4 text-sm font-bold text-white transition hover:bg-brand-600">
+            <ShoppingBag size={17} /><span className="hidden xl:inline">Add</span>
+          </button>
         </div>
-
-        {/* Price */}
-        <p className="text-2xl font-bold text-blue-600 mt-4">
-          ₹{Number(product.price).toLocaleString("en-IN")}
-        </p>
-
-        {/* Button */}
-        <Link
-          to={`/product/${product._id}`}
-          className="mt-5 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition"
-        >
-          <ShoppingCart size={18} />
-          View Details
-        </Link>
       </div>
-    </div>
+    </article>
   );
 };
 

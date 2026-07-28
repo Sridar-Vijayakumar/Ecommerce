@@ -13,7 +13,7 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const pageSize = 6;
+    const pageSize = Math.min(Number(req.query.limit) || 12, 48);
     const page = Number(req.query.page) || 1;
 
     const keyword = req.query.keyword
@@ -35,18 +35,27 @@ const getProducts = async (req, res) => {
       ...keyword,
       ...category,
     };
+    if (req.query.brand) filter.brand = req.query.brand;
+    if (req.query.minPrice || req.query.maxPrice) {
+      filter.price = {};
+      if (req.query.minPrice) filter.price.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) filter.price.$lte = Number(req.query.maxPrice);
+    }
+    if (req.query.rating) filter.rating = { $gte: Number(req.query.rating) };
+    if (req.query.inStock === "true") filter.stock = { $gt: 0 };
 
     const count = await Product.countDocuments(filter);
 
     let query = Product.find(filter);
 
-if (req.query.sort === "low") {
-  query = query.sort({ price: 1 });
-}
-
-if (req.query.sort === "high") {
-  query = query.sort({ price: -1 });
-}
+    const sorts = {
+      low: { price: 1 },
+      high: { price: -1 },
+      newest: { createdAt: -1 },
+      best: { sold: -1 },
+      rated: { rating: -1 },
+    };
+    query = query.sort(sorts[req.query.sort] || { createdAt: -1 });
 
 const products = await query
   .limit(pageSize)

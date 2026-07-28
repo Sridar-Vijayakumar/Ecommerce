@@ -2,8 +2,11 @@ import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import API from "../services/api";
 import RazorpayButton from "../components/RazorpayButton";
+import { useNavigate } from "react-router-dom";
+import { getProductImage } from "../utils/productImage";
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const {
     cartItems,
     totalItems,
@@ -12,6 +15,7 @@ const Checkout = () => {
   } = useContext(CartContext);
 
   const [orderId, setOrderId] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("Razorpay");
 
   const shippingAddress = JSON.parse(
     localStorage.getItem("shippingAddress")
@@ -29,7 +33,7 @@ const Checkout = () => {
       const { data } = await API.post("/orders", {
         orderItems: cartItems,
         shippingAddress,
-        paymentMethod: "Razorpay",
+        paymentMethod,
         itemsPrice: totalPrice,
         shippingPrice,
         taxPrice,
@@ -37,6 +41,11 @@ const Checkout = () => {
       });
 
       setOrderId(data._id);
+      if (paymentMethod === "Cash on Delivery") {
+        clearCart();
+        localStorage.removeItem("shippingAddress");
+        navigate(`/orders/${data._id}`);
+      }
 
     } catch (error) {
       alert(
@@ -76,6 +85,12 @@ const Checkout = () => {
             </p>
           </div>
 
+          <div className="bg-white shadow rounded-xl p-6 mb-6">
+            <h2 className="text-2xl font-bold mb-4">Payment Method</h2>
+            <label className="flex items-center gap-3 rounded-xl border p-4 mb-3"><input type="radio" name="payment" checked={paymentMethod === "Razorpay"} onChange={() => setPaymentMethod("Razorpay")} className="accent-brand-600"/> Razorpay — cards, UPI and wallets</label>
+            <label className="flex items-center gap-3 rounded-xl border p-4"><input type="radio" name="payment" checked={paymentMethod === "Cash on Delivery"} onChange={() => setPaymentMethod("Cash on Delivery")} className="accent-brand-600"/> Cash on Delivery</label>
+          </div>
+
           {/* Order Items */}
           <div className="bg-white shadow rounded-xl p-6">
             <h2 className="text-2xl font-bold mb-4">
@@ -87,11 +102,14 @@ const Checkout = () => {
                 key={item._id}
                 className="flex justify-between border-b py-3"
               >
-                <div>
+                <div className="flex items-center gap-3">
+                  <img src={getProductImage(item)} alt={item.name} className="h-14 w-14 rounded-xl object-cover" />
+                  <div>
                   <h3 className="font-semibold">
                     {item.name}
                   </h3>
                   <p>Qty: {item.qty}</p>
+                  </div>
                 </div>
 
                 <div>
@@ -142,7 +160,7 @@ const Checkout = () => {
               onClick={placeOrderHandler}
               className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg"
             >
-              Create Order
+              {paymentMethod === "Razorpay" ? "Create Order & Pay" : "Place Order"}
             </button>
           ) : (
             <RazorpayButton

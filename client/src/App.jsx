@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-// import Footer from "./components/Footer";
+import Footer from "./components/Footer";
 
 // User Pages
 import Home from "./pages/Home";
@@ -15,7 +15,10 @@ import Checkout from "./pages/Checkout";
 import MyOrders from "./pages/MyOrders";
 import OrderDetails from "./pages/OrderDetails";
 import PaymentSuccess from "./pages/PaymentSuccess";
-// import PaymentFailed from "./pages/PaymentFailed";
+import PaymentFailed from "./pages/PaymentFailed";
+import Wishlist from "./pages/Wishlist";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 
 // Admin Layout
@@ -34,6 +37,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
 
+      <main className="min-h-[calc(100vh-76px)]">
       <Routes>
 
         {/* User Routes */}
@@ -43,21 +47,24 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
 
         <Route path="/cart" element={<Cart />} />
-        <Route path="/shipping" element={<Shipping />} />
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/shipping" element={<ProtectedRoute><Shipping /></ProtectedRoute>} />
+        <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
 
-        <Route path="/myorders" element={<MyOrders />} />
-        <Route path="/orders/:id" element={<OrderDetails />} />
+        <Route path="/myorders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
+        <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
 
         <Route
           path="/payment-success"
           element={<PaymentSuccess />}
         />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
 
-        <Route
+        {/* <Route
           path="/payment-failed"
           element={<PaymentFailed />}
-        />
+        /> */}
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -79,8 +86,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
       </Routes>
-
-      {/* <Footer /> */}
+      </main>
+      <Footer />
     </BrowserRouter>
   );
 }

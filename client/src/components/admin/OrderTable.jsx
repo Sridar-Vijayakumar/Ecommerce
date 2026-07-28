@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const OrderTable = ({ orders = [] }) => {
+const OrderTable = ({ orders = [], onDeliver }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-x-auto">
       <table className="min-w-full">
@@ -82,6 +82,7 @@ const OrderTable = ({ orders = [] }) => {
 
                   {!order.isDelivered && (
                     <button
+                      onClick={() => onDeliver?.(order._id)}
                       className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
                     >
                       Deliver

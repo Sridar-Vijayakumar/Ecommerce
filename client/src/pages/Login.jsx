@@ -27,7 +27,7 @@ const Login = () => {
 
       login(data);
 
-      navigate("/");
+      navigate(data.role === "admin" ? "/admin" : data.role === "seller" ? "/seller" : "/");
     } catch (error) {
       alert(
         error.response?.data?.message || "Login Failed"

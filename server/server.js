@@ -15,6 +15,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const userRoutes = require("./routes/userRoutes");
+const portalRoutes = require("./routes/portalRoutes");
 
 // Connect Database
 connectDB();
@@ -36,6 +37,7 @@ app.use("/api/products", reviewRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/api/portal", portalRoutes);
 
 // Home Route
 app.get("/", (req, res) => {

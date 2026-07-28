@@ -4,7 +4,7 @@ const generateToken = require("../utils/generateToken");
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const userExists = await User.findOne({ email });
 
@@ -20,12 +20,14 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: role === "seller" ? "seller" : "user",
     });
 
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -46,6 +48,7 @@ const loginUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
         token: generateToken(user._id),
       });
     }

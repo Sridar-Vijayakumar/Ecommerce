@@ -59,9 +59,7 @@ const updateUser = async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
 
-    if (req.body.isAdmin !== undefined) {
-      user.isAdmin = req.body.isAdmin;
-    }
+    if (["user", "seller", "admin"].includes(req.body.role)) user.role = req.body.role;
 
     const updatedUser = await user.save();
 

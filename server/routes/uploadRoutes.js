@@ -3,12 +3,12 @@ const router = express.Router();
 
 const upload = require("../middleware/uploadMiddleware");
 const { protect } = require("../middleware/authMiddleware");
-const  admin  = require("../middleware/adminMiddleware");
+const allowRoles = require("../middleware/roleMiddleware");
 
 router.post(
   "/",
   protect,
-  admin,
+  allowRoles("admin", "seller"),
   upload.single("image"),
   (req, res) => {
     console.log("Upload API hit");

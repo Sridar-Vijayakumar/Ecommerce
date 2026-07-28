@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Mail, Sparkles } from "lucide-react";
 
 const groups = [
-  ["Shop", [["All products", "/products"], ["New arrivals", "/products"], ["Best sellers", "/products"], ["Special offers", "/products"]]],
+  ["Shop", [["All products", "/products"], ["New arrivals", "/products?sort=newest"], ["Best sellers", "/products?sort=best"], ["Special offers", "/products?offers=true"]]],
   ["Company", [["About us", "/#about"], ["Contact", "mailto:support@shopease.com"], ["Privacy policy", "/"], ["Terms & conditions", "/"]]],
   ["Help", [["My orders", "/myorders"], ["Shipping", "/shipping"], ["Returns", "/"], ["FAQs", "/"]]],
 ];

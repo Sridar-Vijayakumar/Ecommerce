@@ -48,7 +48,7 @@ function Home() {
         <SectionTitle eyebrow="Browse the good stuff" title="Shop by category" />
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {categories.map(([icon, name, note]) => (
-            <Link key={name} to="/products" className="group rounded-3xl border border-slate-200 bg-white p-5 text-center transition hover:-translate-y-1 hover:border-brand-100 hover:shadow-soft">
+            <Link key={name} to={`/products?category=${encodeURIComponent(name)}`} className="group rounded-3xl border border-slate-200 bg-white p-5 text-center transition hover:-translate-y-1 hover:border-brand-100 hover:shadow-soft">
               <span className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand-50 text-3xl transition group-hover:scale-110">{icon}</span>
               <h3 className="mt-4 font-extrabold text-ink-900">{name}</h3><p className="mt-1 text-xs text-slate-500">{note}</p>
             </Link>
@@ -72,7 +72,7 @@ function Home() {
         <div className="overflow-hidden rounded-[2.5rem] bg-ink-900 px-7 py-12 text-white sm:px-12 lg:flex lg:items-center lg:justify-between lg:py-14">
           <div><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand-500">Weekend special</p><h2 className="mt-3 text-4xl font-black sm:text-5xl">Up to 40% off.</h2><p className="mt-4 max-w-xl text-slate-300">Limited-time prices on selected tech, fashion and home essentials.</p></div>
           <div className="mt-8 rounded-3xl border border-white/10 bg-white/10 p-6 lg:mt-0 lg:min-w-80">
-            <p className="text-sm text-slate-300">Use coupon at checkout</p><div className="mt-3 flex items-center justify-between gap-4"><strong className="text-2xl tracking-widest">SAVE40</strong><Link to="/products" className="rounded-xl bg-coral-500 px-5 py-3 font-bold hover:bg-coral-500/90">Shop deals</Link></div>
+            <p className="text-sm text-slate-300">Use coupon at checkout</p><div className="mt-3 flex items-center justify-between gap-4"><strong className="text-2xl tracking-widest">SAVE40</strong><Link to="/products?offers=true" className="rounded-xl bg-coral-500 px-5 py-3 font-bold hover:bg-coral-500/90">Shop deals</Link></div>
           </div>
         </div>
       </section>

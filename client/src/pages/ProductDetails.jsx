@@ -7,7 +7,7 @@ import Rating from "../components/Rating";
 import ReviewForm from "../components/ReviewForm";
 import { CartContext } from "../context/CartContext";
 import { WishlistContext } from "../context/WishlistContext";
-import { getProductImages } from "../utils/productImage";
+import { getFallbackProductImage, getProductImages } from "../utils/productImage";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -30,7 +30,7 @@ export default function ProductDetails() {
 
   return <div className="page-shell py-12">
     <div className="grid gap-10 lg:grid-cols-2">
-      <div><div className="overflow-hidden rounded-[2rem] bg-white"><img src={selectedImage || "https://placehold.co/800x700"} alt={product.name} className="aspect-square w-full object-cover"/></div>{images.length > 1 && <div className="mt-4 flex gap-3">{images.map((img) => <button key={img} onClick={() => setSelectedImage(img)} className={`overflow-hidden rounded-xl border-2 ${selectedImage === img ? "border-brand-600" : "border-transparent"}`}><img src={img} className="h-20 w-20 object-cover"/></button>)}</div>}</div>
+      <div><div className="overflow-hidden rounded-[2rem] bg-white"><img src={selectedImage} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} alt={product.name} className="aspect-square w-full object-cover"/></div>{images.length > 1 && <div className="mt-4 flex gap-3">{images.map((img) => <button key={img} onClick={() => setSelectedImage(img)} className={`overflow-hidden rounded-xl border-2 ${selectedImage === img ? "border-brand-600" : "border-transparent"}`}><img src={img} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} className="h-20 w-20 object-cover"/></button>)}</div>}</div>
       <div className="lg:pl-5"><p className="text-xs font-extrabold uppercase tracking-[.2em] text-brand-600">{product.brand || product.category}</p><h1 className="mt-3 text-4xl font-black tracking-tight text-ink-900 sm:text-5xl">{product.name}</h1><div className="mt-5 flex items-center gap-3"><Rating value={product.rating || 0} text={`${product.numReviews || 0} reviews`}/><span className={`rounded-full px-3 py-1 text-xs font-bold ${stock > 0 ? "bg-brand-50 text-brand-700" : "bg-red-50 text-red-600"}`}>{stock > 0 ? `${stock} in stock` : "Out of stock"}</span></div>
       <p className="mt-7 text-lg leading-8 text-slate-600">{product.description}</p><div className="mt-7 flex items-end gap-3"><strong className="text-4xl font-black text-ink-900">₹{Number(finalPrice).toLocaleString("en-IN")}</strong>{product.discount > 0 && <><span className="pb-1 text-lg text-slate-400 line-through">₹{Number(product.price).toLocaleString("en-IN")}</span><span className="mb-1 rounded-full bg-coral-500 px-3 py-1 text-xs font-black text-white">{product.discount}% OFF</span></>}</div>
       {stock > 0 && <div className="mt-8 flex items-center gap-3"><label className="font-bold">Quantity</label><select value={qty} onChange={(e) => setQty(Number(e.target.value))} className="rounded-xl border bg-white px-4 py-3">{Array.from({length: Math.min(stock, 10)}, (_,i) => <option key={i+1}>{i+1}</option>)}</select></div>}

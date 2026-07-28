@@ -1,59 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from "../../services/api";
 import OrderTable from "../../components/admin/OrderTable";
+import Loader from "../../components/Loader";
 
-const Orders = () => {
-  const [orders] = useState([
-    {
-      _id: "ORD1001",
-      user: {
-        name: "Sridar",
-      },
-      totalPrice: 45999,
-      isPaid: true,
-      isDelivered: false,
-      createdAt: "2026-07-23",
-    },
-    {
-      _id: "ORD1002",
-      user: {
-        name: "Rahul",
-      },
-      totalPrice: 18999,
-      isPaid: true,
-      isDelivered: true,
-      createdAt: "2026-07-22",
-    },
-    {
-      _id: "ORD1003",
-      user: {
-        name: "Priya",
-      },
-      totalPrice: 9999,
-      isPaid: false,
-      isDelivered: false,
-      createdAt: "2026-07-21",
-    },
-  ]);
-
-  return (
-    <div>
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">
-            Orders
-          </h1>
-
-          <p className="text-gray-500 mt-1">
-            Manage customer orders
-          </p>
-        </div>
-      </div>
-
-      {/* Orders Table */}
-      <OrderTable orders={orders} />
-    </div>
-  );
-};
-
-export default Orders;
+export default function Orders() {
+  const [orders, setOrders] = useState(null);
+  const load = () => API.get("/portal/orders").then(({data}) => setOrders(data));
+  useEffect(load, []);
+  const deliver = async (id) => {
+    await API.put(`/orders/${id}/deliver`);
+    load();
+  };
+  if (!orders) return <Loader/>;
+  return <div><h1 className="text-3xl font-bold">Orders</h1><p className="mt-1 text-gray-500">Manage all customer orders</p><div className="mt-6"><OrderTable orders={orders} onDeliver={deliver}/></div></div>;
+}

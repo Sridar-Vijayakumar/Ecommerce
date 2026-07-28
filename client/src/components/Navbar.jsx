@@ -8,7 +8,12 @@ function Navbar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { totalItems } = useContext(CartContext);
-  const links = [["Home", "/"], ["Categories", "/products"], ["New arrivals", "/products"], ["Offers", "/products"]];
+  const links = [
+    ["Home", "/"],
+    ["Categories", "/products"],
+    ["New arrivals", "/products?sort=newest"],
+    ["Offers", "/products?offers=true"],
+  ];
 
   const search = (event) => {
     event.preventDefault();
@@ -32,7 +37,7 @@ function Navbar() {
         </nav>
         <div className="ml-auto flex items-center gap-1">
           <Link to="/wishlist" aria-label="Wishlist" className="grid h-10 w-10 place-items-center rounded-full text-slate-600 hover:bg-brand-50 hover:text-coral-500"><Heart size={20}/></Link>
-          <Link to="/profile" aria-label="Account" className="grid h-10 w-10 place-items-center rounded-full text-slate-600 hover:bg-brand-50 hover:text-brand-700"><UserRound size={20}/></Link>
+          <Link to="/portal" aria-label="Account portal" className="grid h-10 w-10 place-items-center rounded-full text-slate-600 hover:bg-brand-50 hover:text-brand-700"><UserRound size={20}/></Link>
           <Link to="/cart" aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full bg-ink-900 text-white hover:bg-brand-700">
             <ShoppingBag size={19}/>{totalItems > 0 && <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-coral-500 px-1 text-[10px] font-black">{totalItems}</span>}
           </Link>

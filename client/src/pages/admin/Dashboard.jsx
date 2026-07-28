@@ -16,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const { data } = await API.get("/admin/dashboard");
+        const { data } = await API.get("/portal/dashboard");
 
         setStats(data);
       } catch (error) {

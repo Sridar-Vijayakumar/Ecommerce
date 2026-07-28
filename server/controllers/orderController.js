@@ -23,7 +23,10 @@ const placeOrder = async (req, res) => {
 
     const order = await Order.create({
       user: req.user._id,
-      orderItems,
+      orderItems: orderItems.map((item) => ({
+        ...item,
+        product: item.product || item._id,
+      })),
       shippingAddress,
       paymentMethod,
       totalPrice,

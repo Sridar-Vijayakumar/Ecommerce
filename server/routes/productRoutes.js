@@ -11,12 +11,13 @@ const {
 
 const { protect } = require("../middleware/authMiddleware");
 const  admin  = require("../middleware/adminMiddleware");
+const allowRoles = require("../middleware/roleMiddleware");
 
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 
-router.post("/", protect, admin, createProduct);
-router.put("/:id", protect, admin, updateProduct);
-router.delete("/:id", protect, admin, deleteProduct);
+router.post("/", protect, allowRoles("admin", "seller"), createProduct);
+router.put("/:id", protect, allowRoles("admin", "seller"), updateProduct);
+router.delete("/:id", protect, allowRoles("admin", "seller"), deleteProduct);
 
 module.exports = router;

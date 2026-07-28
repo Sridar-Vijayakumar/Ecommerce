@@ -6,8 +6,11 @@ import {
   Users,
   LogOut,
 } from "lucide-react";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Sidebar = () => {
+  const { logout } = useContext(AuthContext);
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
       isActive
@@ -49,7 +52,7 @@ const Sidebar = () => {
 
       {/* Logout */}
       <div className="p-4 border-t border-gray-700">
-        <button className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition">
+        <button onClick={logout} className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition">
           <LogOut size={18} />
           Logout
         </button>

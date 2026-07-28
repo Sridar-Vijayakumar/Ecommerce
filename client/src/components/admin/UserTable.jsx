@@ -1,6 +1,6 @@
 import { Trash2, ShieldCheck, User } from "lucide-react";
 
-const UserTable = ({ users = [], onDelete }) => {
+const UserTable = ({ users = [], onDelete, onRoleChange }) => {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-x-auto">
       <table className="min-w-full">
@@ -48,16 +48,11 @@ const UserTable = ({ users = [], onDelete }) => {
 
                 {/* Role */}
                 <td className="px-6 py-4 text-center">
-                  {user.role === "admin" ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm">
-                      <ShieldCheck size={16} />
-                      Admin
-                    </span>
-                  ) : (
-                    <span className="inline-flex px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm">
-                      User
-                    </span>
-                  )}
+                  <select value={user.role || "user"} onChange={(e) => onRoleChange(user._id, e.target.value)} className="rounded-lg border bg-white px-2 py-1 text-sm font-semibold">
+                    <option value="user">Customer</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
+                  </select>
                 </td>
 
                 {/* Joined Date */}

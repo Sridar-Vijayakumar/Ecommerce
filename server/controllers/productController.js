@@ -2,10 +2,14 @@ const Product = require("../models/Product");
 
 const createProduct = async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const product = await Product.create({
+      ...req.body,
+      seller: req.user.role === "seller" ? req.user._id : req.body.seller,
+      stock: req.body.stock ?? req.body.countInStock ?? 0,
+    });
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({
+    res.status(400).json({
       message: error.message,
     });
   }
@@ -43,6 +47,8 @@ const getProducts = async (req, res) => {
     }
     if (req.query.rating) filter.rating = { $gte: Number(req.query.rating) };
     if (req.query.inStock === "true") filter.stock = { $gt: 0 };
+    if (req.query.offers === "true") filter.discount = { $gt: 0 };
+    if (req.query.mine === "true" && req.user?.role === "seller") filter.seller = req.user._id;
 
     const count = await Product.countDocuments(filter);
 
@@ -108,9 +114,13 @@ const updateProduct = async (req, res) => {
       });
     }
 
+    if (req.user.role === "seller" && product.seller?.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "You can only update your own products" });
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { ...req.body, stock: req.body.stock ?? req.body.countInStock ?? product.stock },
       {
         new: true,
       }
@@ -132,6 +142,10 @@ const deleteProduct = async (req, res) => {
       return res.status(404).json({
         message: "Product not found",
       });
+    }
+
+    if (req.user.role === "seller" && product.seller?.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "You can only delete your own products" });
     }
 
     await Product.findByIdAndDelete(req.params.id);

@@ -26,17 +26,30 @@ const productImages = {
 };
 
 const defaultImage = "https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=900&q=80";
+const apiOrigin = import.meta.env.VITE_API_ORIGIN || "http://localhost:5000";
 
-export const getProductImage = (product = {}) => {
-  if (product.image?.trim()) return product.image;
-  if (product.images?.length) return product.images.find(Boolean) || defaultImage;
+const normalizeImageUrl = (image) => {
+  if (!image?.trim()) return "";
+  if (/^https?:\/\//i.test(image) || image.startsWith("data:") || image.startsWith("blob:")) return image;
+  const normalizedPath = image.replace(/\\/g, "/").replace(/^\.?\//, "");
+  return `${apiOrigin}/${normalizedPath}`;
+};
+
+export const getFallbackProductImage = (product = {}) => {
   const namedImage = productImages[product.name?.trim().toLowerCase()];
   if (namedImage) return namedImage;
-  return categoryImages[product.category?.toLowerCase()] || defaultImage;
+  return categoryImages[product.category?.trim().toLowerCase()] || defaultImage;
+};
+
+export const getProductImage = (product = {}) => {
+  const primaryImage = normalizeImageUrl(product.image);
+  if (primaryImage) return primaryImage;
+  const galleryImage = (product.images || []).map(normalizeImageUrl).find(Boolean);
+  return galleryImage || getFallbackProductImage(product);
 };
 
 export const getProductImages = (product = {}) => {
-  const uploadedImages = [product.image, ...(product.images || [])].filter(Boolean);
+  const uploadedImages = [product.image, ...(product.images || [])].map(normalizeImageUrl).filter(Boolean);
   return uploadedImages.length ? [...new Set(uploadedImages)] : [getProductImage(product)];
 };
 

@@ -9,6 +9,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ const Register = () => {
         name,
         email,
         password,
+        role,
       });
 
       alert("Registration Successful!");
@@ -88,6 +90,15 @@ const Register = () => {
               }
               required
             />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block mb-2 font-medium">Account type</label>
+            <div className="grid grid-cols-2 gap-3">
+              <button type="button" onClick={() => setRole("user")} className={`rounded-xl border p-3 font-semibold ${role === "user" ? "border-brand-600 bg-brand-50 text-brand-700" : ""}`}>Customer</button>
+              <button type="button" onClick={() => setRole("seller")} className={`rounded-xl border p-3 font-semibold ${role === "seller" ? "border-brand-600 bg-brand-50 text-brand-700" : ""}`}>Seller</button>
+            </div>
           </div>
 
           {/* Password */}

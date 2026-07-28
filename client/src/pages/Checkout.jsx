@@ -2,8 +2,8 @@ import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import API from "../services/api";
 import RazorpayButton from "../components/RazorpayButton";
-import { useNavigate } from "react-router-dom";
-import { getProductImage } from "../utils/productImage";
+import { Link, useNavigate } from "react-router-dom";
+import { getFallbackProductImage, getProductImage } from "../utils/productImage";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -12,6 +12,8 @@ const Checkout = () => {
     totalItems,
     totalPrice,
     clearCart,
+    updateQuantity,
+    removeFromCart,
   } = useContext(CartContext);
 
   const [orderId, setOrderId] = useState(null);
@@ -29,6 +31,14 @@ const Checkout = () => {
     totalPrice + shippingPrice + taxPrice;
 
   const placeOrderHandler = async () => {
+    if (!shippingAddress?.fullName) {
+      navigate("/shipping");
+      return;
+    }
+    if (!cartItems.length) {
+      navigate("/cart");
+      return;
+    }
     try {
       const { data } = await API.post("/orders", {
         orderItems: cartItems,
@@ -69,9 +79,7 @@ const Checkout = () => {
 
           {/* Shipping */}
           <div className="bg-white shadow rounded-xl p-6 mb-6">
-            <h2 className="text-2xl font-bold mb-4">
-              Shipping Address
-            </h2>
+            <div className="mb-4 flex items-center justify-between"><h2 className="text-2xl font-bold">Shipping Address</h2><Link to="/shipping" className="text-sm font-bold text-brand-700">Edit address</Link></div>
 
             <p><strong>Name:</strong> {shippingAddress?.fullName}</p>
             <p><strong>Phone:</strong> {shippingAddress?.phone}</p>
@@ -103,12 +111,18 @@ const Checkout = () => {
                 className="flex justify-between border-b py-3"
               >
                 <div className="flex items-center gap-3">
-                  <img src={getProductImage(item)} alt={item.name} className="h-14 w-14 rounded-xl object-cover" />
+                  <img src={getProductImage(item)} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(item); }} alt={item.name} className="h-14 w-14 rounded-xl object-cover" />
                   <div>
                   <h3 className="font-semibold">
                     {item.name}
                   </h3>
-                  <p>Qty: {item.qty}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <label htmlFor={`qty-${item._id}`} className="text-xs font-semibold text-slate-500">Qty</label>
+                    <select id={`qty-${item._id}`} value={item.qty} disabled={Boolean(orderId)} onChange={(event) => updateQuantity(item._id, Number(event.target.value))} className="rounded-lg border bg-white px-2 py-1 text-sm">
+                      {Array.from({ length: Math.min(Number(item.stock ?? item.countInStock ?? 10), 10) }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
+                    </select>
+                    {!orderId && <button onClick={() => removeFromCart(item._id)} className="text-xs font-bold text-red-500">Remove</button>}
+                  </div>
                   </div>
                 </div>
 

@@ -19,6 +19,13 @@ import PaymentFailed from "./pages/PaymentFailed";
 import Wishlist from "./pages/Wishlist";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import RoleRoute from "./components/RoleRoute";
+import Portal from "./pages/Portal";
+import SellerLayout from "./layouts/SellerLayout";
+import SellerDashboard from "./pages/seller/Dashboard";
+import SellerProducts from "./pages/seller/Products";
+import SellerProductForm from "./pages/seller/ProductForm";
+import SellerOrders from "./pages/seller/Orders";
 import NotFound from "./pages/NotFound";
 
 // Admin Layout
@@ -48,7 +55,8 @@ function App() {
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/portal" element={<Portal />} />
+        <Route path="/profile" element={<RoleRoute roles={["user"]}><Profile /></RoleRoute>} />
         <Route path="/shipping" element={<ProtectedRoute><Shipping /></ProtectedRoute>} />
         <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
 
@@ -70,7 +78,7 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<RoleRoute roles={["admin"]}><AdminLayout /></RoleRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="products/add" element={<AddProduct />} />
@@ -80,6 +88,14 @@ function App() {
           />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Users />} />
+        </Route>
+
+        <Route path="/seller" element={<RoleRoute roles={["seller"]}><SellerLayout /></RoleRoute>}>
+          <Route index element={<SellerDashboard />} />
+          <Route path="products" element={<SellerProducts />} />
+          <Route path="products/add" element={<SellerProductForm />} />
+          <Route path="products/edit/:id" element={<SellerProductForm />} />
+          <Route path="orders" element={<SellerOrders />} />
         </Route>
 
         {/* 404 */}

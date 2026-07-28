@@ -4,7 +4,7 @@ import { Heart, ShoppingBag } from "lucide-react";
 import { CartContext } from "../context/CartContext";
 import { WishlistContext } from "../context/WishlistContext";
 import Rating from "./Rating";
-import { getProductImage } from "../utils/productImage";
+import { getFallbackProductImage, getProductImage } from "../utils/productImage";
 
 const ProductCard = ({ product, badge }) => {
   const { addToCart } = useContext(CartContext);
@@ -17,7 +17,7 @@ const ProductCard = ({ product, badge }) => {
         <Heart size={17} fill={isWishlisted(product._id) ? "currentColor" : "none"} />
       </button>
       <Link to={`/product/${product._id}`} className="block overflow-hidden">
-        <img src={getProductImage(product)} alt={product.name} loading="lazy" className="aspect-[4/3] w-full bg-slate-100 object-cover transition duration-500 group-hover:scale-105" />
+        <img src={getProductImage(product)} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} alt={product.name} loading="lazy" className="aspect-[4/3] w-full bg-slate-100 object-cover transition duration-500 group-hover:scale-105" />
       </Link>
       <div className="p-5">
         <p className="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-brand-600">{product.category}</p>

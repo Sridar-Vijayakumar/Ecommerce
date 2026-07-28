@@ -45,6 +45,15 @@ const Users = () => {
     }
   };
 
+  const handleRoleChange = async (id, role) => {
+    try {
+      await API.put(`/users/${id}`, { role });
+      fetchUsers();
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to update role");
+    }
+  };
+
   if (loading) return <Loader />;
 
   return (
@@ -66,6 +75,7 @@ const Users = () => {
       <UserTable
         users={users}
         onDelete={handleDelete}
+        onRoleChange={handleRoleChange}
       />
     </div>
   );

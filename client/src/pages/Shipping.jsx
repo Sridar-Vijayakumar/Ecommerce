@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Shipping = () => {
   const navigate = useNavigate();
 
-  const [shipping, setShipping] = useState({
+  const [shipping, setShipping] = useState(() => JSON.parse(localStorage.getItem("shippingAddress") || "null") || {
     fullName: "",
     phone: "",
     address: "",

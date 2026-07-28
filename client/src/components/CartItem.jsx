@@ -1,5 +1,5 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { getProductImage } from "../utils/productImage";
+import { getFallbackProductImage, getProductImage } from "../utils/productImage";
 
 const CartItem = ({
   item,
@@ -13,6 +13,7 @@ const CartItem = ({
       <div className="flex items-center gap-5 w-full md:w-auto">
         <img
           src={getProductImage(item)}
+          onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(item); }}
           alt={item.name}
           className="w-28 h-28 object-cover rounded-lg border"
         />
@@ -48,7 +49,8 @@ const CartItem = ({
 
             <button
               onClick={() => increaseQty(item._id)}
-              className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition"
+              disabled={item.qty >= Number(item.stock ?? item.countInStock ?? 999)}
+              className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition disabled:cursor-not-allowed disabled:bg-slate-300"
             >
               <Plus size={18} />
             </button>

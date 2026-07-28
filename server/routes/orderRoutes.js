@@ -5,17 +5,29 @@ const {
   placeOrder,
   getMyOrders,
   getOrderById,
+  getOrders,
+  updateOrderToDelivered,
 } = require("../controllers/orderController");
 
-const { protect } = require("../middleware/authMiddleware");
+const admin = require("../middleware/adminMiddleware")
 
-// Place a new order
+const {
+  protect
+} = require("../middleware/authMiddleware");
+
 router.post("/", protect, placeOrder);
 
-// Get logged-in user's orders
 router.get("/myorders", protect, getMyOrders);
 
-// Get a single order by ID
+router.get("/", protect, admin, getOrders);
+
 router.get("/:id", protect, getOrderById);
+
+router.put(
+  "/:id/deliver",
+  protect,
+  admin,
+  updateOrderToDelivered
+);
 
 module.exports = router;

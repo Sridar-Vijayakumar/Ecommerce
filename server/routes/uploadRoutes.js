@@ -3,7 +3,7 @@ const router = express.Router();
 
 const upload = require("../middleware/uploadMiddleware");
 const { protect } = require("../middleware/authMiddleware");
-const { admin } = require("../middleware/adminMiddleware");
+const  admin  = require("../middleware/adminMiddleware");
 
 router.post(
   "/",

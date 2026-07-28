@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
+import Rating from "./Rating";
 
 const ProductCard = ({ product }) => {
   return (
@@ -7,7 +8,7 @@ const ProductCard = ({ product }) => {
       {/* Product Image */}
       <Link to={`/product/${product._id}`}>
         <img
-          src={product.image}
+          src={product.image || "https://placehold.co/400x300"}
           alt={product.name}
           className="w-full h-60 object-cover"
         />
@@ -26,29 +27,22 @@ const ProductCard = ({ product }) => {
         </p>
 
         {/* Rating */}
-        <div className="flex items-center gap-1 mt-2">
-          <Star
-            size={16}
-            className="fill-yellow-400 text-yellow-400"
+        <div className="mt-3">
+          <Rating
+            value={product.rating || 0}
+            text={`${product.numReviews || 0} Reviews`}
           />
-          <span className="text-sm text-gray-600">
-            {product.rating || 4.5}
-          </span>
-
-          <span className="text-gray-400">
-            ({product.numReviews || 0})
-          </span>
         </div>
 
         {/* Price */}
-        <p className="text-2xl font-bold text-blue-600 mt-3">
-          ₹{product.price}
+        <p className="text-2xl font-bold text-blue-600 mt-4">
+          ₹{Number(product.price).toLocaleString("en-IN")}
         </p>
 
         {/* Button */}
         <Link
           to={`/product/${product._id}`}
-          className="mt-4 w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition"
+          className="mt-5 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition"
         >
           <ShoppingCart size={18} />
           View Details

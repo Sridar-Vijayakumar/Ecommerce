@@ -10,7 +10,7 @@ const {
 } = require("../controllers/productController");
 
 const { protect } = require("../middleware/authMiddleware");
-const { admin } = require("../middleware/adminMiddleware");
+const  admin  = require("../middleware/adminMiddleware");
 
 router.get("/", getProducts);
 router.get("/:id", getProductById);

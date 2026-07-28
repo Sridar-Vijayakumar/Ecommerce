@@ -1,39 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from "../../services/api";
+import Loader from "../../components/Loader";
 import UserTable from "../../components/admin/UserTable";
 
 const Users = () => {
-  const [users] = useState([
-    {
-      _id: "1",
-      name: "Sridar",
-      email: "sridar@gmail.com",
-      role: "admin",
-      createdAt: "2026-07-20",
-    },
-    {
-      _id: "2",
-      name: "Rahul",
-      email: "rahul@gmail.com",
-      role: "user",
-      createdAt: "2026-07-18",
-    },
-    {
-      _id: "3",
-      name: "Priya",
-      email: "priya@gmail.com",
-      role: "user",
-      createdAt: "2026-07-15",
-    },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      console.log("Delete User:", id);
+  const fetchUsers = async () => {
+    try {
+      const { data } = await API.get("/users");
 
-      // TODO:
-      // DELETE /api/users/:id
+      setUsers(data.users || data);
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+          "Failed to fetch users"
+      );
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this user?")) {
+      return;
+    }
+
+    try {
+      await API.delete(`/users/${id}`);
+
+      alert("User deleted successfully");
+
+      fetchUsers();
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+          "Delete failed"
+      );
+    }
+  };
+
+  if (loading) return <Loader />;
 
   return (
     <div>

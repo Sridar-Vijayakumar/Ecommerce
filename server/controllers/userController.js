@@ -72,6 +72,33 @@ const updateUser = async (req, res) => {
   }
 };
 
+// @desc    Delete User
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    await user.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 // @desc    Update User Profile
 // @route   PUT /api/users/profile
 // @access  Private
@@ -133,4 +160,5 @@ module.exports = {
   getUsers,
   getUserById,
   updateUser,
+  deleteUser,
 };

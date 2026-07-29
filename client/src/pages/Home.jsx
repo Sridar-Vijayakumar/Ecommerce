@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Headphones, PackageCheck, RotateCcw, ShieldCheck } from "lucide-react";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
+import API from "../services/api";
 
-const products = [
+export const homeProducts = [
   { _id: "1", name: "iPhone 16 Pro", brand: "Apple", image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=700&q=80", price: 129999, oldPrice: 139999, category: "Electronics", rating: 4.8, numReviews: 120 },
   { _id: "2", name: "Air Max Sneakers", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80", price: 8999, category: "Shoes", rating: 4.9, numReviews: 248 },
   { _id: "3", name: "Studio Headphones", brand: "Sony", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80", price: 12499, oldPrice: 15999, category: "Electronics", rating: 4.7, numReviews: 194 },
@@ -42,7 +43,23 @@ const SectionTitle = ({ eyebrow, title, link = true }) => (
 function Home() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
-  const subscribe = (e) => { e.preventDefault(); if (email) setSubscribed(true); };
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeMessage, setSubscribeMessage] = useState("");
+  const subscribe = async (e) => {
+    e.preventDefault();
+    setSubscribing(true);
+    setSubscribeMessage("");
+    try {
+      const { data } = await API.post("/newsletter/subscribe", { email });
+      setSubscribed(true);
+      setSubscribeMessage(data.message);
+      setEmail("");
+    } catch (error) {
+      setSubscribeMessage(error.response?.data?.message || "Unable to subscribe right now. Please try again.");
+    } finally {
+      setSubscribing(false);
+    }
+  };
 
   return (
     <>
@@ -62,13 +79,13 @@ function Home() {
 
       <section className="page-shell pb-20">
         <SectionTitle eyebrow="Popular right now" title="Featured products" />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.slice(0, 8).map((product, i) => <ProductCard key={product._id} product={product} badge={i < 2 ? "Hot" : null}/>)}</div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{homeProducts.slice(0, 8).map((product, i) => <ProductCard key={product._id} product={product} badge={i < 2 ? "Hot" : null}/>)}</div>
       </section>
 
       <section className="bg-[#eef8f5] py-20">
         <div className="page-shell">
           <SectionTitle eyebrow="Just landed" title="New arrivals" />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.slice(8).map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{homeProducts.slice(8).map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
         </div>
       </section>
 
@@ -83,7 +100,7 @@ function Home() {
 
       <section className="page-shell pb-20">
         <SectionTitle eyebrow="Tried, loved, repeated" title="Best sellers" />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{[products[1], products[6], products[2], products[7]].map((product) => <ProductCard key={product._id} product={product} badge="Best seller"/>)}</div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{[homeProducts[1], homeProducts[6], homeProducts[2], homeProducts[7]].map((product) => <ProductCard key={product._id} product={product} badge="Best seller"/>)}</div>
       </section>
 
       <section className="border-y border-slate-200 bg-white py-14">
@@ -116,8 +133,9 @@ function Home() {
       <section className="page-shell py-20">
         <div className="rounded-[2.5rem] bg-brand-600 px-6 py-12 text-center text-white sm:px-12">
           <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand-100">A better inbox</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">{subscribed ? "You’re on the list!" : "Get 10% off your first order"}</h2>
-          <p className="mx-auto mt-3 max-w-xl text-brand-100">{subscribed ? "Watch your inbox for fresh finds and members-only offers." : "Subscribe for new arrivals, useful finds and members-only offers."}</p>
-          {!subscribed && <form onSubmit={subscribe} className="mx-auto mt-7 flex max-w-lg flex-col gap-2 rounded-2xl bg-white p-2 sm:flex-row"><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" className="min-w-0 flex-1 rounded-xl px-4 py-3 text-ink-900 outline-none"/><button className="rounded-xl bg-ink-900 px-6 py-3 font-bold text-white">Subscribe</button></form>}
+          <p className="mx-auto mt-3 max-w-xl text-brand-100">{subscribed ? "Watch your inbox for your welcome offer and future updates." : "Enter your email address to receive special offers and updates."}</p>
+          {!subscribed && <form onSubmit={subscribe} className="mx-auto mt-7 flex max-w-lg flex-col gap-2 rounded-2xl bg-white p-2 sm:flex-row"><input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" aria-label="Email address" className="min-w-0 flex-1 rounded-xl px-4 py-3 text-ink-900 outline-none"/><button disabled={subscribing} className="rounded-xl bg-ink-900 px-6 py-3 font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-500">{subscribing ? "Sending…" : "Subscribe"}</button></form>}
+          {subscribeMessage && <p role="status" className={`mx-auto mt-4 max-w-lg text-sm font-semibold ${subscribed ? "text-white" : "text-amber-100"}`}>{subscribeMessage}</p>}
         </div>
       </section>
     </>

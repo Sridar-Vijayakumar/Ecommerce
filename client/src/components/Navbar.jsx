@@ -38,7 +38,7 @@ function Navbar() {
         <div className="ml-auto flex items-center gap-1">
           <Link to="/wishlist" aria-label="Wishlist" className="grid h-10 w-10 place-items-center rounded-full text-slate-600 hover:bg-brand-50 hover:text-coral-500"><Heart size={20}/></Link>
           <Link to="/portal" aria-label="Account portal" className="grid h-10 w-10 place-items-center rounded-full text-slate-600 hover:bg-brand-50 hover:text-brand-700"><UserRound size={20}/></Link>
-          <Link to="/cart" aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full bg-ink-900 text-white hover:bg-brand-700">
+          <Link id="navbar-cart" to="/cart" aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full bg-ink-900 text-white hover:bg-brand-700">
             <ShoppingBag size={19}/>{totalItems > 0 && <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-coral-500 px-1 text-[10px] font-black">{totalItems}</span>}
           </Link>
           <button onClick={() => setOpen(!open)} className="grid h-10 w-10 place-items-center rounded-full text-slate-700 xl:hidden" aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button>

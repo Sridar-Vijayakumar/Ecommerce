@@ -5,6 +5,7 @@ import { CartContext } from "../context/CartContext";
 import { WishlistContext } from "../context/WishlistContext";
 import Rating from "./Rating";
 import { getFallbackProductImage, getProductImage } from "../utils/productImage";
+import { animateProductToCart } from "../utils/cartAnimation";
 
 const ProductCard = ({ product, badge }) => {
   const { addToCart } = useContext(CartContext);
@@ -21,6 +22,11 @@ const ProductCard = ({ product, badge }) => {
     : price;
   const originalPrice = product.discount ? price : oldPrice;
   const cardBadge = hasDiscount ? `${discount}% off` : badge;
+  const addProduct = (event) => {
+    const card = event.currentTarget.closest("article");
+    animateProductToCart(card?.querySelector("img"));
+    addToCart(product, 1);
+  };
 
   return (
     <article className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-soft">
@@ -48,7 +54,7 @@ const ProductCard = ({ product, badge }) => {
               </p>
             )}
           </div>
-          <button onClick={() => addToCart(product, 1)} aria-label={`Add ${product.name} to cart`} className="flex h-11 items-center gap-2 rounded-full bg-ink-900 px-4 text-sm font-bold text-white transition hover:bg-brand-600">
+          <button onClick={addProduct} aria-label={`Add ${product.name} to cart`} className="flex h-11 items-center gap-2 rounded-full bg-ink-900 px-4 text-sm font-bold text-white transition hover:bg-brand-600">
             <ShoppingBag size={17} /><span className="hidden xl:inline">Add</span>
           </button>
         </div>

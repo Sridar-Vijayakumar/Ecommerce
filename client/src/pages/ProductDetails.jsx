@@ -8,6 +8,8 @@ import ReviewForm from "../components/ReviewForm";
 import { CartContext } from "../context/CartContext";
 import { WishlistContext } from "../context/WishlistContext";
 import { getFallbackProductImage, getProductImages } from "../utils/productImage";
+import { animateProductToCart } from "../utils/cartAnimation";
+import { homeProducts } from "./Home";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -18,19 +20,45 @@ export default function ProductDetails() {
   const [selectedImage, setSelectedImage] = useState("");
   const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(true);
-  const fetchProduct = async () => { setLoading(true); try { const { data } = await API.get(`/products/${id}`); setProduct(data); setSelectedImage(getProductImages(data)[0]); } finally { setLoading(false); } };
+  const fetchProduct = async () => {
+    setLoading(true);
+    const localProduct = homeProducts.find((item) => item._id === id);
+    try {
+      const { data } = await API.get(`/products/${id}`);
+      setProduct(data);
+      setSelectedImage(getProductImages(data)[0]);
+    } catch {
+      if (localProduct) {
+        const completeProduct = {
+          ...localProduct,
+          stock: 25,
+          description: `${localProduct.name} by ${localProduct.brand || "ShopEase"}, selected for dependable quality and everyday value.`,
+          reviews: [],
+        };
+        setProduct(completeProduct);
+        setSelectedImage(getProductImages(completeProduct)[0]);
+      } else {
+        setProduct(null);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => { fetchProduct(); }, [id]);
   if (loading) return <Loader/>;
   if (!product) return <div className="py-20 text-center text-2xl font-black">Product not found</div>;
   const stock = product.stock ?? product.countInStock ?? 0;
   const images = getProductImages(product);
   const finalPrice = product.discount ? product.price * (1 - product.discount / 100) : product.price;
-  const add = () => addToCart(product, qty);
+  const add = () => {
+    animateProductToCart(document.querySelector("[data-product-main-image]"));
+    addToCart(product, qty);
+  };
   const buy = () => { add(); navigate("/shipping"); };
 
   return <div className="page-shell py-12">
     <div className="grid gap-10 lg:grid-cols-2">
-      <div><div className="overflow-hidden rounded-[2rem] bg-white"><img src={selectedImage} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} alt={product.name} className="aspect-square w-full object-cover"/></div>{images.length > 1 && <div className="mt-4 flex gap-3">{images.map((img) => <button key={img} onClick={() => setSelectedImage(img)} className={`overflow-hidden rounded-xl border-2 ${selectedImage === img ? "border-brand-600" : "border-transparent"}`}><img src={img} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} className="h-20 w-20 object-cover"/></button>)}</div>}</div>
+      <div><div className="overflow-hidden rounded-[2rem] bg-white"><img data-product-main-image src={selectedImage} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} alt={product.name} className="aspect-square w-full object-cover"/></div>{images.length > 1 && <div className="mt-4 flex gap-3">{images.map((img) => <button key={img} onClick={() => setSelectedImage(img)} className={`overflow-hidden rounded-xl border-2 ${selectedImage === img ? "border-brand-600" : "border-transparent"}`}><img src={img} alt="" onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = getFallbackProductImage(product); }} className="h-20 w-20 object-cover"/></button>)}</div>}</div>
       <div className="lg:pl-5"><p className="text-xs font-extrabold uppercase tracking-[.2em] text-brand-600">{product.brand || product.category}</p><h1 className="mt-3 text-4xl font-black tracking-tight text-ink-900 sm:text-5xl">{product.name}</h1><div className="mt-5 flex items-center gap-3"><Rating value={product.rating || 0} text={`${product.numReviews || 0} reviews`}/><span className={`rounded-full px-3 py-1 text-xs font-bold ${stock > 0 ? "bg-brand-50 text-brand-700" : "bg-red-50 text-red-600"}`}>{stock > 0 ? `${stock} in stock` : "Out of stock"}</span></div>
       <p className="mt-7 text-lg leading-8 text-slate-600">{product.description}</p><div className="mt-7 flex flex-wrap items-end gap-3"><div><p className="text-xs font-bold uppercase tracking-wider text-slate-400">{product.discount > 0 ? "Discount price" : "Price"}</p><strong className="text-4xl font-black text-ink-900">₹{Number(finalPrice).toLocaleString("en-IN")}</strong></div>{product.discount > 0 && <><span className="pb-1 text-lg text-slate-500">MRP <span className="line-through">₹{Number(product.price).toLocaleString("en-IN")}</span></span><span className="mb-1 rounded-full bg-coral-500 px-3 py-1 text-xs font-black text-white">{product.discount}% OFF</span></>}</div>
       {stock > 0 && <div className="mt-8 flex items-center gap-3"><label className="font-bold">Quantity</label><select value={qty} onChange={(e) => setQty(Number(e.target.value))} className="rounded-xl border bg-white px-4 py-3">{Array.from({length: Math.min(stock, 10)}, (_,i) => <option key={i+1}>{i+1}</option>)}</select></div>}

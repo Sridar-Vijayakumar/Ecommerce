@@ -17,7 +17,7 @@ const Pagination = ({ pages, page, onPageChange }) => {
       >
         <ChevronLeft size={18} />
         Prev
-      </button>
+      </button>  
 
       {/* Page Numbers */}
       {[...Array(pages).keys()].map((x) => (

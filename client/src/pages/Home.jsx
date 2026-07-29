@@ -5,18 +5,22 @@ import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
 
 const products = [
-  { _id: "1", name: "iPhone 16 Pro", image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=700&q=80", price: 129999, oldPrice: 139999, category: "Electronics", rating: 4.8, numReviews: 120 },
+  { _id: "1", name: "iPhone 16 Pro", brand: "Apple", image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=700&q=80", price: 129999, oldPrice: 139999, category: "Electronics", rating: 4.8, numReviews: 120 },
   { _id: "2", name: "Air Max Sneakers", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80", price: 8999, category: "Shoes", rating: 4.9, numReviews: 248 },
-  { _id: "3", name: "Studio Headphones", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80", price: 12499, oldPrice: 15999, category: "Electronics", rating: 4.7, numReviews: 194 },
+  { _id: "3", name: "Studio Headphones", brand: "Sony", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=700&q=80", price: 12499, oldPrice: 15999, category: "Electronics", rating: 4.7, numReviews: 194 },
   { _id: "4", name: "Minimal Lounge Chair", image: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=700&q=80", price: 18999, category: "Furniture", rating: 4.6, numReviews: 76 },
   { _id: "5", name: "Classic Leather Watch", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=700&q=80", price: 6999, category: "Fashion", rating: 4.8, numReviews: 155 },
   { _id: "6", name: "Everyday Skin Set", image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=700&q=80", price: 2499, category: "Beauty", rating: 4.5, numReviews: 89 },
-  { _id: "7", name: "MacBook Air", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=700&q=80", price: 99999, category: "Electronics", rating: 4.9, numReviews: 310 },
+  { _id: "7", name: "MacBook Air", brand: "Apple", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=700&q=80", price: 99999, category: "Electronics", rating: 4.9, numReviews: 310 },
   { _id: "8", name: "Premium Coffee Blend", image: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=700&q=80", price: 899, category: "Groceries", rating: 4.7, numReviews: 131 },
   { _id: "9", name: "Linen Weekend Shirt", image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=700&q=80", price: 2999, category: "Fashion", rating: 4.6, numReviews: 64 },
-  { _id: "10", name: "Wireless Speaker", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=80", price: 5999, category: "Electronics", rating: 4.8, numReviews: 203 },
+  { _id: "10", name: "Wireless Speaker", brand: "JBL", image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=700&q=80", price: 5999, category: "Electronics", rating: 4.8, numReviews: 203 },
   { _id: "11", name: "Modern Table Lamp", image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80", price: 3499, category: "Furniture", rating: 4.6, numReviews: 57 },
   { _id: "12", name: "Running Essentials", image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=700&q=80", price: 4999, category: "Fashion", rating: 4.7, numReviews: 93 },
+  { _id: "13", name: "Cordless Telephone", brand: "Panasonic", image: "https://images.unsplash.com/photo-1523966211575-eb4a01e7dd51?auto=format&fit=crop&w=700&q=80", price: 3499, category: "Electronics", rating: 4.5, numReviews: 86 },
+  { _id: "14", name: "Food Processor", brand: "Philips", image: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?auto=format&fit=crop&w=700&q=80", price: 7499, category: "Electronics", rating: 4.7, numReviews: 142 },
+  { _id: "15", name: "Dual-Band Internet Router", brand: "TP-Link", image: "https://images.unsplash.com/photo-1606904825846-647eb07f5be2?auto=format&fit=crop&w=700&q=80", price: 2999, category: "Electronics", rating: 4.6, numReviews: 177 },
+  { _id: "16", name: "Wi-Fi Modem", brand: "Netgear", image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=700&q=80", price: 4999, category: "Electronics", rating: 4.6, numReviews: 119 },
 ];
 
 const categories = [
@@ -64,7 +68,7 @@ function Home() {
       <section className="bg-[#eef8f5] py-20">
         <div className="page-shell">
           <SectionTitle eyebrow="Just landed" title="New arrivals" />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.slice(8, 12).map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{products.slice(8).map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
         </div>
       </section>
 

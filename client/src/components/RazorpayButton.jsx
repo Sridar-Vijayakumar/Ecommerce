@@ -80,7 +80,7 @@ const RazorpayButton = ({
           },
         },
       };
-
+ 
       const paymentObject =
         new window.Razorpay(options);
 

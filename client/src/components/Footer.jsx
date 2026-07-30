@@ -3,8 +3,8 @@ import { Mail, Sparkles } from "lucide-react";
 
 const groups = [
   ["Shop", [["All products", "/products"], ["New arrivals", "/products?sort=newest"], ["Best sellers", "/products?sort=best"], ["Special offers", "/products?offers=true"]]],
-  ["Company", [["About us", "/#about"], ["Contact", "mailto:support10shopease@gmail.com"], ["Privacy policy", "/"], ["Terms & conditions", "/"]]],
-  ["Help", [["My orders", "/myorders"], ["Shipping", "/shipping"], ["Returns", "/"], ["FAQs", "/"]]],
+  ["Company", [["About us", "/#about"], ["Contact", "mailto:support10shopease@gmail.com"], ["Privacy policy", "/help/privacy"], ["Terms & conditions", "/help/terms"]]],
+  ["Help", [["My orders", "/myorders"], ["Shipping", "/shipping"], ["Returns", "/help/returns"], ["FAQs", "/help/faqs"]]],
 ];
 
 function Footer() {

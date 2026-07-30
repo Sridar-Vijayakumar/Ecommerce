@@ -1,15 +1,21 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  // Use Vite's local proxy by default, or an explicitly configured API in production.
+  baseURL: import.meta.env.VITE_API_URL || "/api",
 });
 
 // Add JWT Token Automatically
 API.interceptors.request.use(
   (config) => {
-    const userInfo = JSON.parse(
-      localStorage.getItem("userInfo")
-    );
+    let userInfo;
+
+    try {
+      userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    } catch {
+      // A stale/corrupt login must not prevent public API requests.
+      localStorage.removeItem("userInfo");
+    }
 
     if (userInfo?.token) {
       config.headers.Authorization = `Bearer ${userInfo.token}`;

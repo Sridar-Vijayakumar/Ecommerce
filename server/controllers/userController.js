@@ -151,7 +151,7 @@ const getUsers = async (req, res) => {
       message: error.message,
     });
   }
-};
+};   
 
 module.exports = {
   getUserProfile,

@@ -2,10 +2,17 @@ import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
+const getSavedUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem("userInfo")) || null;
+  } catch {
+    localStorage.removeItem("userInfo");
+    return null;
+  }
+};
+
 const AuthProvider = ({ children }) => {
-  const [userInfo, setUserInfo] = useState(
-    JSON.parse(localStorage.getItem("userInfo")) || null
-  );
+  const [userInfo, setUserInfo] = useState(getSavedUser);
  
   const login = (data) => {
     setUserInfo(data);
@@ -34,5 +41,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
-
-  

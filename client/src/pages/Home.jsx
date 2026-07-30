@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Headphones, PackageCheck, RotateCcw, ShieldCheck } from "lucide-react";
 import Hero from "../components/Hero";
@@ -41,10 +41,23 @@ const SectionTitle = ({ eyebrow, title, link = true }) => (
 );
 
 function Home() {
+  const [catalogProducts, setCatalogProducts] = useState([]);
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [subscribing, setSubscribing] = useState(false);
   const [subscribeMessage, setSubscribeMessage] = useState("");
+
+  useEffect(() => {
+    API.get("/products?limit=16")
+      .then(({ data }) => setCatalogProducts(data.products || []))
+      .catch(() => setCatalogProducts([]));
+  }, []);
+
+  const featuredProducts = catalogProducts.slice(0, 8);
+  const newProducts = catalogProducts.slice(8, 16);
+  const bestSellers = [...catalogProducts]
+    .sort((a, b) => (b.sold || 0) - (a.sold || 0))
+    .slice(0, 4);
   const subscribe = async (e) => {
     e.preventDefault();
     setSubscribing(true);
@@ -79,13 +92,13 @@ function Home() {
 
       <section className="page-shell pb-20">
         <SectionTitle eyebrow="Popular right now" title="Featured products" />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{homeProducts.slice(0, 8).map((product, i) => <ProductCard key={product._id} product={product} badge={i < 2 ? "Hot" : null}/>)}</div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{featuredProducts.map((product, i) => <ProductCard key={product._id} product={product} badge={i < 2 ? "Hot" : null}/>)}</div>
       </section>
 
       <section className="bg-[#eef8f5] py-20">
         <div className="page-shell">
           <SectionTitle eyebrow="Just landed" title="New arrivals" />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{homeProducts.slice(8).map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{newProducts.map((product) => <ProductCard key={product._id} product={product} badge="New"/>)}</div>
         </div>
       </section>
 
@@ -100,7 +113,7 @@ function Home() {
 
       <section className="page-shell pb-20">
         <SectionTitle eyebrow="Tried, loved, repeated" title="Best sellers" />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{[homeProducts[1], homeProducts[6], homeProducts[2], homeProducts[7]].map((product) => <ProductCard key={product._id} product={product} badge="Best seller"/>)}</div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">{bestSellers.map((product) => <ProductCard key={product._id} product={product} badge="Best seller"/>)}</div>
       </section>
 
       <section className="border-y border-slate-200 bg-white py-14">

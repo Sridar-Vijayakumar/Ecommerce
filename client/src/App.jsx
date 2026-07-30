@@ -27,6 +27,7 @@ import SellerProducts from "./pages/seller/Products";
 import SellerProductForm from "./pages/seller/ProductForm";
 import SellerOrders from "./pages/seller/Orders";
 import NotFound from "./pages/NotFound";
+import Information from "./pages/Information";
 
 // Admin Layout
 import AdminLayout from "./layouts/AdminLayout";
@@ -76,6 +77,7 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/help/:page" element={<Information />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<RoleRoute roles={["admin"]}><AdminLayout /></RoleRoute>}>
